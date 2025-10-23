@@ -136,13 +136,19 @@ onUnmounted(() => {
 .flip-card {
   background-color: transparent;
   width: 100%;
-  height: 350px;
+  min-height: 350px;
+  max-height: 500px;
+  height: 500px;
   perspective: 1000px;
+  margin-bottom: 2rem;
 }
 
 @media (min-width: 768px) {
   .flip-card {
-    height: 400px;
+    min-height: 400px;
+    max-height: 600px;
+    height: 600px;
+    margin-bottom: 3rem;
   }
 }
 

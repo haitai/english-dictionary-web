@@ -10,11 +10,14 @@
     </div>
 
     <!-- 当前单词卡片 -->
-    <div v-if="currentWord" class="mb-8">
-      <WordCard :word="currentWord.word" :word-data="currentWord" />
+    <div v-if="currentWord">
+      <!-- 单词卡片容器 -->
+      <div class="word-card-wrapper">
+        <WordCard :word="currentWord.word" :word-data="currentWord" />
+      </div>
 
       <!-- 掌握程度选择 -->
-      <div class="mt-6">
+      <div class="quality-selection">
         <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">
           您对这个单词的掌握程度是？
         </h3>
@@ -213,4 +216,37 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyPress)
 })
 </script>
+
+<style scoped>
+/* 确保卡片容器有足够的空间，避免与按钮重叠 */
+.word-card-wrapper {
+  min-height: 500px;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .word-card-wrapper {
+    min-height: 600px;
+    margin-bottom: 4rem;
+  }
+}
+
+/* 评分选择区域 */
+.quality-selection {
+  margin-top: 2rem;
+  position: relative;
+  z-index: 10;
+  background-color: transparent;
+  padding-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .quality-selection {
+    margin-top: 3rem;
+    padding-top: 2rem;
+  }
+}
+</style>
 
