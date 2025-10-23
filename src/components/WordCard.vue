@@ -3,19 +3,19 @@
     <div class="flip-card-inner">
       <!-- 正面：单词 -->
       <div class="flip-card-front">
-        <div class="card min-h-[400px] flex flex-col items-center justify-center relative">
-          <h2 class="text-5xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
+        <div class="card min-h-[350px] md:min-h-[400px] flex flex-col items-center justify-center relative">
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 md:mb-8 text-center px-4">
             {{ word }}
           </h2>
           
           <button
             @click="isFlipped = true"
-            class="btn btn-primary text-lg px-8 py-3"
+            class="btn btn-primary text-base md:text-lg px-6 md:px-8 py-2 md:py-3"
           >
             查看释义
           </button>
 
-          <div class="mt-6 text-sm text-gray-500 dark:text-gray-400 text-center">
+          <div class="mt-4 md:mt-6 text-xs md:text-sm text-gray-500 dark:text-gray-400 text-center px-4">
             点击查看释义，或按空格键翻转
           </div>
         </div>
@@ -23,65 +23,65 @@
 
       <!-- 背面：释义 -->
       <div class="flip-card-back">
-        <div class="card min-h-[400px] flex flex-col">
-          <!-- 固定头部 -->
-          <div class="flex items-center justify-between mb-6 bg-white dark:bg-gray-800 py-4 border-b border-gray-200 dark:border-gray-700">
-            <div>
-              <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+        <div class="card min-h-[500px] md:min-h-[600px] flex flex-col">
+          <!-- 紧凑头部 -->
+          <div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex-1">
+              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {{ wordData?.word }}
               </h2>
-              <p v-if="wordData?.pronunciation" class="text-gray-600 dark:text-gray-400 mt-2 text-lg">
+              <p v-if="wordData?.pronunciation" class="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
                 [{{ wordData.pronunciation }}]
               </p>
             </div>
             <button
               @click="isFlipped = false"
-              class="p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="返回"
+              class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ml-4"
+              title="返回 (Esc)"
             >
-              <span class="text-xl">↩️</span>
+              <span class="text-lg">↩️</span>
             </button>
           </div>
 
-          <!-- 可滚动内容区域 -->
-          <div class="flex-1 overflow-y-auto px-1">
+          <!-- 可滚动内容区域 - 最大化空间利用 -->
+          <div class="flex-1 overflow-y-auto px-2">
             <!-- 简明释义 -->
-            <div v-if="wordData?.concise_definition" class="mb-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl">
-              <h3 class="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">简明释义</h3>
-              <p class="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
+            <div v-if="wordData?.concise_definition" class="mb-4 p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
+              <h3 class="text-xs font-semibold text-primary-600 dark:text-primary-400 mb-2">简明释义</h3>
+              <p class="text-gray-800 dark:text-gray-200 text-base leading-relaxed">
                 {{ wordData.concise_definition }}
               </p>
             </div>
 
             <!-- 详细释义 -->
-            <div v-if="wordData?.definitions && wordData.definitions.length > 0" class="space-y-6">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">详细释义</h3>
+            <div v-if="wordData?.definitions && wordData.definitions.length > 0" class="space-y-4">
+              <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">详细释义</h3>
               <div
                 v-for="(def, index) in wordData.definitions"
                 :key="index"
-                class="border-l-4 border-primary-500 pl-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-r-xl"
+                class="border-l-3 border-primary-500 pl-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-r-lg"
               >
-                <div class="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-3">
+                <div class="text-xs font-semibold text-primary-600 dark:text-primary-400 mb-2">
                   {{ def.pos }}
                 </div>
-                <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-sm">
                   {{ def.explanation_cn }}
                 </p>
-                <div v-if="def.example_en" class="text-sm bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <p class="text-gray-600 dark:text-gray-400 mb-2 italic" v-html="highlightWord(def.example_en, wordData?.word)"></p>
+                <div v-if="def.example_en" class="text-xs bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+                  <p class="text-gray-600 dark:text-gray-400 mb-1 italic" v-html="highlightWord(def.example_en, wordData?.word)"></p>
                   <p class="text-gray-700 dark:text-gray-300" v-html="highlightWord(def.example_cn, wordData?.word)"></p>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 固定底部按钮 -->
-          <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <!-- 紧凑底部按钮 -->
+          <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <button
               @click="isFlipped = false"
-              class="w-full btn btn-secondary text-lg py-3"
+              class="w-full btn btn-secondary text-sm py-2"
             >
-              返回单词
+              返回单词 (Esc)
             </button>
           </div>
         </div>
@@ -121,6 +121,9 @@ function handleKeyPress(e) {
   if (e.code === 'Space') {
     e.preventDefault()
     isFlipped.value = !isFlipped.value
+  } else if (e.code === 'Escape' && isFlipped.value) {
+    e.preventDefault()
+    isFlipped.value = false
   }
 }
 
@@ -142,8 +145,14 @@ onUnmounted(() => {
 .flip-card {
   background-color: transparent;
   width: 100%;
-  height: 400px;
+  height: 350px;
   perspective: 1000px;
+}
+
+@media (min-width: 768px) {
+  .flip-card {
+    height: 400px;
+  }
 }
 
 .flip-card-inner {

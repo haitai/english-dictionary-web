@@ -124,13 +124,6 @@
           </div>
         </div>
       </div>
-
-      <!-- 返回按钮 -->
-      <div class="text-center">
-        <button @click="$router.back()" class="btn btn-secondary">
-          ← 返回
-        </button>
-      </div>
     </div>
 
     <!-- 错误提示 -->

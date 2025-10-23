@@ -1,10 +1,10 @@
 <template>
-  <div class="max-w-4xl mx-auto">
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-4 md:mb-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
         学习模式
       </h1>
-      <p class="text-gray-600 dark:text-gray-400">
+      <p class="text-sm md:text-base text-gray-600 dark:text-gray-400">
         选择单词开始学习，标记您的掌握程度
       </p>
     </div>
@@ -14,29 +14,34 @@
       <WordCard :word="currentWord.word" :word-data="currentWord" />
 
       <!-- 掌握程度选择 -->
-      <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">
+      <div class="mt-6">
+        <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 text-center">
           您对这个单词的掌握程度是？
         </h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-4 text-center">
+          快捷键：1-不认识，2-有点难，3-很简单
+        </p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
           <button
-            v-for="option in qualityOptions"
+            v-for="(option, index) in qualityOptions"
             :key="option.value"
             @click="markWord(option.value)"
             :class="[
-              'group relative p-6 rounded-xl border-2 transition-all duration-200',
-              'hover:scale-105 hover:shadow-lg',
-              option.color === 'red' && 'border-red-300 bg-red-50 hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:hover:bg-red-900/30',
-              option.color === 'yellow' && 'border-yellow-300 bg-yellow-50 hover:bg-yellow-100 dark:border-yellow-700 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/30',
-              option.color === 'green' && 'border-green-300 bg-green-50 hover:bg-green-100 dark:border-green-700 dark:bg-green-900/20 dark:hover:bg-green-900/30',
+              'group relative p-4 md:p-6 rounded-lg border-2 transition-all duration-200',
+              'hover:scale-105 hover:shadow-lg active:scale-95',
+              'focus:outline-none focus:ring-2 focus:ring-offset-2',
+              option.color === 'red' && 'border-red-300 bg-red-50 hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:hover:bg-red-900/30 focus:ring-red-500',
+              option.color === 'yellow' && 'border-yellow-300 bg-yellow-50 hover:bg-yellow-100 dark:border-yellow-700 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/30 focus:ring-yellow-500',
+              option.color === 'green' && 'border-green-300 bg-green-50 hover:bg-green-100 dark:border-green-700 dark:bg-green-900/20 dark:hover:bg-green-900/30 focus:ring-green-500',
               submitting && 'opacity-50 cursor-not-allowed'
             ]"
             :disabled="submitting"
+            :title="`快捷键: ${index + 1}`"
           >
             <div class="text-center">
               <div :class="[
-                'text-2xl mb-2',
+                'text-xl md:text-2xl mb-2',
                 option.color === 'red' && 'text-red-600 dark:text-red-400',
                 option.color === 'yellow' && 'text-yellow-600 dark:text-yellow-400',
                 option.color === 'green' && 'text-green-600 dark:text-green-400'
@@ -44,7 +49,7 @@
                 {{ option.icon }}
               </div>
               <div :class="[
-                'font-semibold text-lg mb-2',
+                'font-semibold text-sm md:text-lg mb-1',
                 option.color === 'red' && 'text-red-800 dark:text-red-200',
                 option.color === 'yellow' && 'text-yellow-800 dark:text-yellow-200',
                 option.color === 'green' && 'text-green-800 dark:text-green-200'
@@ -52,31 +57,34 @@
                 {{ option.label }}
               </div>
               <p :class="[
-                'text-sm',
+                'text-xs md:text-sm leading-tight',
                 option.color === 'red' && 'text-red-600 dark:text-red-400',
                 option.color === 'yellow' && 'text-yellow-600 dark:text-yellow-400',
                 option.color === 'green' && 'text-green-600 dark:text-green-400'
               ]">
                 {{ option.description }}
               </p>
+              <div class="mt-2 text-xs font-mono bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                {{ index + 1 }}
+              </div>
             </div>
           </button>
         </div>
       </div>
 
       <!-- 收藏按钮 -->
-      <div class="mt-6 text-center">
+      <div class="mt-4 md:mt-6 text-center">
         <button
           v-if="userStore.isAuthenticated"
           @click="toggleCollection"
           :class="[
-            'btn px-6 py-3',
+            'btn px-4 md:px-6 py-2 md:py-3 text-sm md:text-base',
             isCollected ? 'btn-primary' : 'btn-outline'
           ]"
         >
           {{ isCollected ? '⭐ 已收藏' : '☆ 收藏' }}
         </button>
-        <p v-else class="text-sm text-gray-500 dark:text-gray-400">
+        <p v-else class="text-xs md:text-sm text-gray-500 dark:text-gray-400">
           登录后可收藏单词
         </p>
       </div>
@@ -99,10 +107,10 @@
 
     <!-- 学习进度 -->
     <div v-if="learnedCount > 0" class="card text-center">
-      <p class="text-gray-600 dark:text-gray-400">
-        本次已学习 <span class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ learnedCount }}</span> 个单词
+      <p class="text-sm md:text-base text-gray-600 dark:text-gray-400">
+        本次已学习 <span class="text-xl md:text-2xl font-bold text-primary-600 dark:text-primary-400">{{ learnedCount }}</span> 个单词
       </p>
-      <button @click="loadRandomWord" class="btn btn-primary mt-4">
+      <button @click="loadRandomWord" class="btn btn-primary mt-3 md:mt-4 text-sm md:text-base">
         继续学习
       </button>
     </div>
@@ -110,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import WordCard from '@/components/WordCard.vue'
 import { useDictionaryStore } from '@/stores/dictionary'
 import { useLearningStore } from '@/stores/learning'
@@ -189,8 +197,27 @@ async function toggleCollection() {
   }
 }
 
+// 键盘快捷键处理
+function handleKeyPress(e) {
+  if (submitting.value) return
+  
+  // 数字键 1-3 对应掌握程度
+  if (e.key >= '1' && e.key <= '3') {
+    e.preventDefault()
+    const qualityIndex = parseInt(e.key) - 1
+    if (qualityIndex < qualityOptions.length) {
+      markWord(qualityOptions[qualityIndex].value)
+    }
+  }
+}
+
 onMounted(() => {
   loadRandomWord()
+  window.addEventListener('keydown', handleKeyPress)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyPress)
 })
 </script>
 
