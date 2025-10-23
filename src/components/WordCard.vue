@@ -23,8 +23,9 @@
 
       <!-- 背面：释义 -->
       <div class="flip-card-back">
-        <div class="card min-h-[400px] overflow-y-auto">
-          <div class="flex items-center justify-between mb-6 sticky top-0 bg-white dark:bg-gray-800 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="card min-h-[400px] flex flex-col">
+          <!-- 固定头部 -->
+          <div class="flex items-center justify-between mb-6 bg-white dark:bg-gray-800 py-4 border-b border-gray-200 dark:border-gray-700">
             <div>
               <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {{ wordData?.word }}
@@ -42,36 +43,40 @@
             </button>
           </div>
 
-          <!-- 简明释义 -->
-          <div v-if="wordData?.concise_definition" class="mb-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl">
-            <h3 class="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">简明释义</h3>
-            <p class="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
-              {{ wordData.concise_definition }}
-            </p>
-          </div>
-
-          <!-- 详细释义 -->
-          <div v-if="wordData?.definitions && wordData.definitions.length > 0" class="space-y-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">详细释义</h3>
-            <div
-              v-for="(def, index) in wordData.definitions"
-              :key="index"
-              class="border-l-4 border-primary-500 pl-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-r-xl"
-            >
-              <div class="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-3">
-                {{ def.pos }}
-              </div>
-              <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                {{ def.explanation_cn }}
+          <!-- 可滚动内容区域 -->
+          <div class="flex-1 overflow-y-auto px-1">
+            <!-- 简明释义 -->
+            <div v-if="wordData?.concise_definition" class="mb-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl">
+              <h3 class="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">简明释义</h3>
+              <p class="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
+                {{ wordData.concise_definition }}
               </p>
-              <div v-if="def.example_en" class="text-sm bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-                <p class="text-gray-600 dark:text-gray-400 mb-2 italic">{{ def.example_en }}</p>
-                <p class="text-gray-700 dark:text-gray-300">{{ def.example_cn }}</p>
+            </div>
+
+            <!-- 详细释义 -->
+            <div v-if="wordData?.definitions && wordData.definitions.length > 0" class="space-y-6">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">详细释义</h3>
+              <div
+                v-for="(def, index) in wordData.definitions"
+                :key="index"
+                class="border-l-4 border-primary-500 pl-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-r-xl"
+              >
+                <div class="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-3">
+                  {{ def.pos }}
+                </div>
+                <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                  {{ def.explanation_cn }}
+                </p>
+                <div v-if="def.example_en" class="text-sm bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+                  <p class="text-gray-600 dark:text-gray-400 mb-2 italic" v-html="highlightWord(def.example_en, wordData?.word)"></p>
+                  <p class="text-gray-700 dark:text-gray-300" v-html="highlightWord(def.example_cn, wordData?.word)"></p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <!-- 固定底部按钮 -->
+          <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <button
               @click="isFlipped = false"
               class="w-full btn btn-secondary text-lg py-3"
@@ -100,6 +105,16 @@ const props = defineProps({
 })
 
 const isFlipped = ref(false)
+
+// 高亮单词功能
+function highlightWord(text, word) {
+  if (!text || !word) return text
+  
+  // 创建不区分大小写的正则表达式
+  const regex = new RegExp(`\\b(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'gi')
+  
+  return text.replace(regex, '<span class="highlight-word">$1</span>')
+}
 
 // 键盘事件处理
 function handleKeyPress(e) {
@@ -160,6 +175,53 @@ onUnmounted(() => {
 .flip-card-front .card,
 .flip-card-back .card {
   height: 100%;
+}
+
+/* 高亮单词样式 */
+.highlight-word {
+  background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
+  color: #1f2937;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.dark .highlight-word {
+  background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
+  color: #111827;
+}
+
+/* 自定义滚动条样式 */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 </style>
 
