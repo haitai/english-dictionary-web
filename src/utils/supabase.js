@@ -74,13 +74,12 @@ export const collections = {
 
   // 移除收藏
   async removeCollection(userId, word) {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('user_collections')
       .delete()
       .eq('user_id', userId)
       .eq('word', word)
-      .select()
-    return { data, error }
+    return { error }
   },
 
   // 检查是否已收藏
