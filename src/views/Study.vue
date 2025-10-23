@@ -13,32 +13,64 @@
     <div v-if="currentWord" class="mb-8">
       <WordCard :word="currentWord.word" :word-data="currentWord" />
 
-      <!-- 操作按钮 -->
-      <div class="mt-6 flex flex-col md:flex-row gap-4 justify-center">
-        <button
-          v-for="option in qualityOptions"
-          :key="option.value"
-          @click="markWord(option.value)"
-          :class="[
-            'btn flex-1 py-4 text-lg',
-            option.color === 'red' && 'bg-red-500 hover:bg-red-600 text-white',
-            option.color === 'yellow' && 'bg-yellow-500 hover:bg-yellow-600 text-white',
-            option.color === 'green' && 'bg-green-500 hover:bg-green-600 text-white'
-          ]"
-          :disabled="submitting"
-        >
-          {{ option.label }}
-          <span class="block text-sm opacity-80 mt-1">{{ option.description }}</span>
-        </button>
+      <!-- 掌握程度选择 -->
+      <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">
+          您对这个单词的掌握程度是？
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <button
+            v-for="option in qualityOptions"
+            :key="option.value"
+            @click="markWord(option.value)"
+            :class="[
+              'group relative p-6 rounded-xl border-2 transition-all duration-200',
+              'hover:scale-105 hover:shadow-lg',
+              option.color === 'red' && 'border-red-300 bg-red-50 hover:bg-red-100 dark:border-red-700 dark:bg-red-900/20 dark:hover:bg-red-900/30',
+              option.color === 'yellow' && 'border-yellow-300 bg-yellow-50 hover:bg-yellow-100 dark:border-yellow-700 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/30',
+              option.color === 'green' && 'border-green-300 bg-green-50 hover:bg-green-100 dark:border-green-700 dark:bg-green-900/20 dark:hover:bg-green-900/30',
+              submitting && 'opacity-50 cursor-not-allowed'
+            ]"
+            :disabled="submitting"
+          >
+            <div class="text-center">
+              <div :class="[
+                'text-2xl mb-2',
+                option.color === 'red' && 'text-red-600 dark:text-red-400',
+                option.color === 'yellow' && 'text-yellow-600 dark:text-yellow-400',
+                option.color === 'green' && 'text-green-600 dark:text-green-400'
+              ]">
+                {{ option.icon }}
+              </div>
+              <div :class="[
+                'font-semibold text-lg mb-2',
+                option.color === 'red' && 'text-red-800 dark:text-red-200',
+                option.color === 'yellow' && 'text-yellow-800 dark:text-yellow-200',
+                option.color === 'green' && 'text-green-800 dark:text-green-200'
+              ]">
+                {{ option.label }}
+              </div>
+              <p :class="[
+                'text-sm',
+                option.color === 'red' && 'text-red-600 dark:text-red-400',
+                option.color === 'yellow' && 'text-yellow-600 dark:text-yellow-400',
+                option.color === 'green' && 'text-green-600 dark:text-green-400'
+              ]">
+                {{ option.description }}
+              </p>
+            </div>
+          </button>
+        </div>
       </div>
 
       <!-- 收藏按钮 -->
-      <div class="mt-4 text-center">
+      <div class="mt-6 text-center">
         <button
           v-if="userStore.isAuthenticated"
           @click="toggleCollection"
           :class="[
-            'btn',
+            'btn px-6 py-3',
             isCollected ? 'btn-primary' : 'btn-outline'
           ]"
         >

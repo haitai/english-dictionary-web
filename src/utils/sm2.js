@@ -86,9 +86,9 @@ export function getQualityLabel(quality) {
  * 获取简化的质量选项（三个按钮）
  */
 export const simpleQualityOptions = [
-  { value: 1, label: '不认识', color: 'red', description: '完全不记得这个单词' },
-  { value: 3, label: '有点难', color: 'yellow', description: '记得但不太确定' },
-  { value: 5, label: '很简单', color: 'green', description: '立即想起来了' }
+  { value: 1, label: '不认识', color: 'red', description: '完全不记得这个单词', icon: '😵' },
+  { value: 3, label: '有点难', color: 'yellow', description: '记得但不太确定', icon: '🤔' },
+  { value: 5, label: '很简单', color: 'green', description: '立即想起来了', icon: '😊' }
 ]
 
 /**
