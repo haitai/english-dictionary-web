@@ -23,7 +23,7 @@
 
       <!-- 背面：释义 -->
       <div class="flip-card-back">
-        <div class="card min-h-[500px] md:min-h-[600px] flex flex-col">
+        <div class="card min-h-[500px] md:min-h-[600px] flex flex-col h-full">
           <!-- 紧凑头部 -->
           <div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 py-3 border-b border-gray-200 dark:border-gray-700">
             <div class="flex-1">
@@ -34,17 +34,10 @@
                 [{{ wordData.pronunciation }}]
               </p>
             </div>
-            <button
-              @click="isFlipped = false"
-              class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ml-4"
-              title="返回 (Esc)"
-            >
-              <span class="text-lg">↩️</span>
-            </button>
           </div>
 
-          <!-- 可滚动内容区域 - 最大化空间利用 -->
-          <div class="flex-1 overflow-y-auto px-2">
+          <!-- 可滚动内容区域 - 修复高度问题 -->
+          <div class="flex-1 overflow-y-auto px-2 pb-4 scrollable-content">
             <!-- 简明释义 -->
             <div v-if="wordData?.concise_definition" class="mb-4 p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
               <h3 class="text-xs font-semibold text-primary-600 dark:text-primary-400 mb-2">简明释义</h3>
@@ -76,7 +69,7 @@
           </div>
 
           <!-- 紧凑底部按钮 -->
-          <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <div class="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <button
               @click="isFlipped = false"
               class="w-full btn btn-secondary text-sm py-2"
@@ -184,6 +177,12 @@ onUnmounted(() => {
 .flip-card-front .card,
 .flip-card-back .card {
   height: 100%;
+}
+
+/* 修复滚动内容区域 */
+.scrollable-content {
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
 /* 高亮单词样式 */
