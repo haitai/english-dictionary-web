@@ -57,9 +57,9 @@
         to="/study"
         class="card hover:shadow-xl transition-shadow cursor-pointer group"
       >
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center justify-center space-x-4 w-full">
           <div class="text-5xl">📖</div>
-          <div class="flex-1">
+          <div class="flex-1 text-center">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
               开始学习
             </h3>
@@ -67,7 +67,6 @@
               浏览词汇库，学习新单词
             </p>
           </div>
-          <span class="text-2xl group-hover:translate-x-1 transition-transform">→</span>
         </div>
       </router-link>
 
@@ -76,9 +75,9 @@
         to="/review"
         class="card hover:shadow-xl transition-shadow cursor-pointer group"
       >
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center justify-center space-x-4">
           <div class="text-5xl">🔄</div>
-          <div class="flex-1">
+          <div class="flex-1 text-center">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
               复习单词
             </h3>
@@ -86,7 +85,6 @@
               根据记忆曲线复习
             </p>
           </div>
-          <span class="text-2xl group-hover:translate-x-1 transition-transform">→</span>
         </div>
       </router-link>
 

@@ -23,56 +23,54 @@
 
       <!-- 背面：释义 -->
       <div class="flip-card-back">
-        <div class="card min-h-[500px] md:min-h-[600px] flex flex-col h-full">
+        <div class="card word-detail-card">
           <!-- 紧凑头部 -->
-          <div class="flex items-center justify-between mb-4 bg-white dark:bg-gray-800 py-3 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex-1">
-              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                {{ wordData?.word }}
-              </h2>
-              <p v-if="wordData?.pronunciation" class="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
-                [{{ wordData.pronunciation }}]
-              </p>
-            </div>
+          <div class="word-header">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 text-center">
+              {{ wordData?.word }}
+            </h2>
+            <p v-if="wordData?.pronunciation" class="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base text-center">
+              [{{ wordData.pronunciation }}]
+            </p>
           </div>
 
-          <!-- 可滚动内容区域 - 修复高度问题 -->
-          <div class="flex-1 overflow-y-auto px-2 pb-4 scrollable-content">
+          <!-- 可滚动内容区域 -->
+          <div class="word-content">
             <!-- 简明释义 -->
             <div v-if="wordData?.concise_definition" class="mb-4 p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
               <h3 class="text-xs font-semibold text-primary-600 dark:text-primary-400 mb-2">简明释义</h3>
-              <p class="text-gray-800 dark:text-gray-200 text-base leading-relaxed">
+              <p class="text-gray-800 dark:text-gray-200 text-sm md:text-base leading-relaxed">
                 {{ wordData.concise_definition }}
               </p>
             </div>
 
             <!-- 详细释义 -->
-            <div v-if="wordData?.definitions && wordData.definitions.length > 0" class="space-y-4">
-              <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">详细释义</h3>
+            <div v-if="wordData?.definitions && wordData.definitions.length > 0" class="space-y-3">
+              <h3 class="text-sm md:text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">详细释义</h3>
               <div
                 v-for="(def, index) in wordData.definitions"
                 :key="index"
-                class="border-l-3 border-primary-500 pl-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-r-lg"
+                class="border-l-4 border-primary-500 pl-3 py-2 bg-gray-50 dark:bg-gray-700/50 rounded-r-lg"
               >
                 <div class="text-xs font-semibold text-primary-600 dark:text-primary-400 mb-2">
                   {{ def.pos }}
                 </div>
-                <p class="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-sm">
+                <p class="text-gray-700 dark:text-gray-300 mb-2 leading-relaxed text-xs md:text-sm">
                   {{ def.explanation_cn }}
                 </p>
-                <div v-if="def.example_en" class="text-xs bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <p class="text-gray-600 dark:text-gray-400 mb-1 italic" v-html="highlightWord(def.example_en, wordData?.word)"></p>
-                  <p class="text-gray-700 dark:text-gray-300" v-html="highlightWord(def.example_cn, wordData?.word)"></p>
+                <div v-if="def.example_en" class="text-xs bg-white dark:bg-gray-800 p-2 md:p-3 rounded-lg border border-gray-200 dark:border-gray-600 mt-2">
+                  <p class="text-gray-600 dark:text-gray-400 mb-1 italic leading-snug" v-html="highlightWord(def.example_en, wordData?.word)"></p>
+                  <p class="text-gray-700 dark:text-gray-300 leading-snug" v-html="highlightWord(def.example_cn, wordData?.word)"></p>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 紧凑底部按钮 -->
-          <div class="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <!-- 底部按钮 -->
+          <div class="word-footer">
             <button
               @click="isFlipped = false"
-              class="w-full btn btn-secondary text-sm py-2"
+              class="w-full btn btn-secondary text-xs md:text-sm py-2"
             >
               返回单词 (Esc)
             </button>
@@ -179,10 +177,49 @@ onUnmounted(() => {
   height: 100%;
 }
 
-/* 修复滚动内容区域 */
-.scrollable-content {
+/* 单词详情卡片布局 */
+.word-detail-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  min-height: 500px;
+}
+
+@media (min-width: 768px) {
+  .word-detail-card {
+    min-height: 600px;
+  }
+}
+
+/* 头部样式 */
+.word-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: white;
+}
+
+.dark .word-header {
+  border-bottom-color: #374151;
+  background-color: #1f2937;
+}
+
+/* 内容区域 */
+.word-content {
+  overflow-y: auto;
+  padding: 16px;
   min-height: 0;
-  flex: 1 1 auto;
+}
+
+/* 底部按钮 */
+.word-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #e5e7eb;
+  background-color: white;
+}
+
+.dark .word-footer {
+  border-top-color: #374151;
+  background-color: #1f2937;
 }
 
 /* 高亮单词样式 */
@@ -202,33 +239,33 @@ onUnmounted(() => {
 }
 
 /* 自定义滚动条样式 */
-.overflow-y-auto::-webkit-scrollbar {
+.word-content::-webkit-scrollbar {
   width: 6px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-track {
+.word-content::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 3px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb {
+.word-content::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+.word-content::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
-.dark .overflow-y-auto::-webkit-scrollbar-track {
+.dark .word-content::-webkit-scrollbar-track {
   background: #374151;
 }
 
-.dark .overflow-y-auto::-webkit-scrollbar-thumb {
+.dark .word-content::-webkit-scrollbar-thumb {
   background: #6b7280;
 }
 
-.dark .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+.dark .word-content::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
 </style>
