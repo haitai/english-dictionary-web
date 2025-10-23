@@ -1,0 +1,29 @@
+{
+  "name": "english-dictionary-web",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "基于开源英汉词典的记单词网站，支持跨端数据同步",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build-index && vite build",
+    "preview": "vite preview",
+    "build-index": "node scripts/build-index.js",
+    "process-dictionary": "node scripts/process-dictionary.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.8",
+    "chart.js": "^4.4.2",
+    "idb": "^8.0.3",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21",
+    "vue-chartjs": "^5.3.0",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.1.6"
+  }
+}
