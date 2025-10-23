@@ -172,71 +172,74 @@ export const useLearningStore = defineStore('learning', () => {
     }
   }
 
-  // 加载收藏列表（优先使用缓存）
+  // 加载收藏列表（直接从服务器）
   async function loadCollections() {
     if (!userStore.user) return
 
-    // 先从缓存加载
-    loadFromCache()
-
-    // 后台同步
-    syncWithServer()
+    try {
+      const { data, error: err } = await collections.getCollections(userStore.user.id)
+      if (err) throw err
+      
+      collectionList.value = data || []
+      saveToCache()
+    } catch (err) {
+      console.error('加载收藏失败:', err)
+      // 失败时尝试从缓存加载
+      loadFromCache()
+    }
   }
 
-  // 添加收藏（乐观更新 + 后台同步）
+  // 添加收藏（直接同步）
   async function addCollection(word) {
     if (!userStore.user) {
       error.value = '请先登录'
       return { success: false }
     }
 
-    // 立即更新本地状态（乐观更新）
-    const newItem = {
-      word,
-      created_at: new Date().toISOString()
+    try {
+      // 直接调用服务器
+      const { data, error: err } = await collections.addCollection(userStore.user.id, word)
+      if (err) throw err
+
+      // 服务器成功后更新本地状态
+      const newItem = {
+        word,
+        created_at: new Date().toISOString()
+      }
+      collectionList.value.unshift(newItem)
+      
+      // 保存到缓存
+      saveToCache()
+
+      console.log('成功添加收藏:', word)
+      return { success: true }
+    } catch (err) {
+      console.error('添加收藏失败:', err)
+      return { success: false, error: err }
     }
-    collectionList.value.unshift(newItem)
-    
-    // 保存到缓存
-    saveToCache()
-
-    // 添加到同步队列
-    addToSyncQueue(userStore.user.id, 'addCollection', { word })
-
-    // 后台同步
-    setTimeout(() => {
-      processSyncQueue().catch(err => {
-        console.error('后台同步失败:', err)
-      })
-    }, 100)
-
-    return { success: true }
   }
 
-  // 移除收藏（乐观更新 + 立即同步）
+  // 移除收藏（直接同步）
   async function removeCollection(word) {
     if (!userStore.user) return { success: false }
 
-    // 立即更新本地状态
-    collectionList.value = collectionList.value.filter(c => c.word !== word)
-    
-    // 保存到缓存
-    saveToCache()
-
-    // 立即执行删除操作，不使用队列
     try {
-      await collections.removeCollection(userStore.user.id, word)
+      // 直接调用服务器
+      const { data, error: err } = await collections.removeCollection(userStore.user.id, word)
+      if (err) throw err
+
+      // 服务器成功后更新本地状态
+      collectionList.value = collectionList.value.filter(c => c.word !== word)
+      
+      // 保存到缓存
+      saveToCache()
+
       console.log('成功取消收藏:', word)
+      return { success: true }
     } catch (err) {
       console.error('取消收藏失败:', err)
-      // 失败后恢复数据
-      const { data } = await collections.getCollections(userStore.user.id)
-      collectionList.value = data || []
-      saveToCache()
-      return { success: false }
+      return { success: false, error: err }
     }
-
-    return { success: true }
   }
 
   // 检查是否已收藏
@@ -244,15 +247,22 @@ export const useLearningStore = defineStore('learning', () => {
     return collectedWords.value.includes(word)
   }
 
-  // 加载学习进度（优先使用缓存）
+  // 加载学习进度（直接从服务器）
   async function loadProgress() {
     if (!userStore.user) return
 
-    // 先从缓存加载
-    loadFromCache()
-
-    // 后台同步
-    syncWithServer()
+    try {
+      const { data, error: err } = await progress.getProgress(userStore.user.id)
+      if (err) throw err
+      
+      progressList.value = data || []
+      calculateStats()
+      saveToCache()
+    } catch (err) {
+      console.error('加载进度失败:', err)
+      // 失败时尝试从缓存加载
+      loadFromCache()
+    }
   }
 
   // 更新单词学习进度（乐观更新 + 后台同步）
