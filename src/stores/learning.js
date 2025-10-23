@@ -103,6 +103,9 @@ export const useLearningStore = defineStore('learning', () => {
       // 先处理待同步队列
       await processSyncQueue()
       
+      // 等待一小段时间确保服务器端处理完成
+      await new Promise(resolve => setTimeout(resolve, 300))
+      
       // 然后从服务器拉取最新数据
       await Promise.all([
         syncCollections(),
@@ -210,7 +213,7 @@ export const useLearningStore = defineStore('learning', () => {
     return { success: true }
   }
 
-  // 移除收藏（乐观更新 + 后台同步）
+  // 移除收藏（乐观更新 + 立即同步）
   async function removeCollection(word) {
     if (!userStore.user) return { success: false }
 
@@ -220,15 +223,18 @@ export const useLearningStore = defineStore('learning', () => {
     // 保存到缓存
     saveToCache()
 
-    // 添加到同步队列
-    addToSyncQueue(userStore.user.id, 'removeCollection', { word })
-
-    // 后台同步
-    setTimeout(() => {
-      processSyncQueue().catch(err => {
-        console.error('后台同步失败:', err)
-      })
-    }, 100)
+    // 立即执行删除操作，不使用队列
+    try {
+      await collections.removeCollection(userStore.user.id, word)
+      console.log('成功取消收藏:', word)
+    } catch (err) {
+      console.error('取消收藏失败:', err)
+      // 失败后恢复数据
+      const { data } = await collections.getCollections(userStore.user.id)
+      collectionList.value = data || []
+      saveToCache()
+      return { success: false }
+    }
 
     return { success: true }
   }
