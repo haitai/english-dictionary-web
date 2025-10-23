@@ -15,12 +15,9 @@
 
       <!-- 掌握程度选择 -->
       <div class="mt-6">
-        <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 text-center">
+        <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">
           您对这个单词的掌握程度是？
         </h3>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-4 text-center">
-          快捷键：1-不认识，2-有点难，3-很简单
-        </p>
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl mx-auto">
           <button
@@ -37,7 +34,6 @@
               submitting && 'opacity-50 cursor-not-allowed'
             ]"
             :disabled="submitting"
-            :title="`快捷键: ${index + 1}`"
           >
             <div class="text-center">
               <div :class="[
@@ -64,9 +60,6 @@
               ]">
                 {{ option.description }}
               </p>
-              <div class="mt-2 text-xs font-mono bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
-                {{ index + 1 }}
-              </div>
             </div>
           </button>
         </div>

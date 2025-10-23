@@ -147,6 +147,85 @@
       </div>
     </div>
 
+    <!-- 使用帮助 -->
+    <div class="mt-16">
+      <div class="card">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            使用帮助
+          </h2>
+          <button 
+            @click="showHelp = !showHelp"
+            class="btn btn-outline text-sm"
+          >
+            {{ showHelp ? '收起' : '查看' }}
+          </button>
+        </div>
+        
+        <div v-if="showHelp" class="space-y-6">
+          <!-- 学习模式快捷键 -->
+          <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center">
+              <span class="text-xl mr-2">⌨️</span>
+              学习模式快捷键
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <kbd class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono mr-3">空格</kbd>
+                  <span class="text-gray-700 dark:text-gray-300">翻转单词卡片</span>
+                </div>
+                <div class="flex items-center">
+                  <kbd class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono mr-3">Esc</kbd>
+                  <span class="text-gray-700 dark:text-gray-300">返回单词面</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <kbd class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono mr-3">1</kbd>
+                  <span class="text-gray-700 dark:text-gray-300">不认识</span>
+                </div>
+                <div class="flex items-center">
+                  <kbd class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono mr-3">2</kbd>
+                  <span class="text-gray-700 dark:text-gray-300">有点难</span>
+                </div>
+                <div class="flex items-center">
+                  <kbd class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono mr-3">3</kbd>
+                  <span class="text-gray-700 dark:text-gray-300">很简单</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 学习建议 -->
+          <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold text-green-800 dark:text-green-200 mb-3 flex items-center">
+              <span class="text-xl mr-2">💡</span>
+              学习建议
+            </h3>
+            <ul class="space-y-2 text-sm text-green-700 dark:text-green-300">
+              <li class="flex items-start">
+                <span class="text-green-500 mr-2">•</span>
+                <span>每天坚持学习 15-30 分钟，效果最佳</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-green-500 mr-2">•</span>
+                <span>诚实评估掌握程度，系统会据此调整复习间隔</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-green-500 mr-2">•</span>
+                <span>收藏重要单词，方便重点复习</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-green-500 mr-2">•</span>
+                <span>定期查看复习页面，巩固已学单词</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 功能特性 -->
     <div class="mt-16">
       <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-8">
@@ -198,6 +277,7 @@ const userStore = useUserStore()
 
 const randomWords = ref([])
 const loading = ref(false)
+const showHelp = ref(false)
 
 async function loadRandomWords() {
   loading.value = true
@@ -217,6 +297,24 @@ onMounted(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+kbd {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #374151;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dark kbd {
+  color: #d1d5db;
+  background-color: #374151;
+  border-color: #4b5563;
 }
 </style>
 
