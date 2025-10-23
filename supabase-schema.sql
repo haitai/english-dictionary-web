@@ -55,9 +55,25 @@ CREATE POLICY "Users can insert own collections"
 
 -- 用户可以删除自己的收藏
 CREATE POLICY "Users can delete own collections"
-  ON user_progress
+  ON user_collections
   FOR DELETE
   USING (auth.uid() = user_id);
+
+-- ============================================
+-- user_progress 表的 RLS 策略
+-- ============================================
+
+-- 用户可以查看自己的进度
+CREATE POLICY "Users can view own progress"
+  ON user_progress
+  FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- 用户可以插入自己的进度
+CREATE POLICY "Users can insert own progress"
+  ON user_progress
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
 
 -- 用户可以更新自己的进度
 CREATE POLICY "Users can update own progress"
@@ -65,6 +81,12 @@ CREATE POLICY "Users can update own progress"
   FOR UPDATE
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
+
+-- 用户可以删除自己的进度
+CREATE POLICY "Users can delete own progress"
+  ON user_progress
+  FOR DELETE
+  USING (auth.uid() = user_id);
 
 -- ============================================
 -- 触发器：自动更新 updated_at 字段
