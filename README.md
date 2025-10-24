@@ -211,7 +211,6 @@ english-dictionary-web/
 如有问题或建议，欢迎：
 
 - 提交 [Issue](https://github.com/TICKurt/english-dictionary-web/issues)
-- 发送邮件至 your-email@example.com
 
 ---
 
