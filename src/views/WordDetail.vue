@@ -12,9 +12,16 @@
       <div class="card">
         <div class="flex items-start justify-between">
           <div class="flex-1">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-              {{ wordData.word }}
-            </h1>
+            <div class="flex items-center gap-4 mb-2">
+              <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">
+                {{ wordData.word }}
+              </h1>
+              <SpeakerButton 
+                :text="wordData.word"
+                :lang="'en'"
+                :speed="0.8"
+              />
+            </div>
             <p v-if="wordData.pronunciation" class="text-xl text-gray-600 dark:text-gray-400 mb-4">
               [{{ wordData.pronunciation }}]
             </p>
@@ -145,6 +152,7 @@ import { useRoute } from 'vue-router'
 import { useDictionaryStore } from '@/stores/dictionary'
 import { useLearningStore } from '@/stores/learning'
 import { useUserStore } from '@/stores/user'
+import SpeakerButton from '@/components/SpeakerButton.vue'
 
 const route = useRoute()
 const dictionaryStore = useDictionaryStore()

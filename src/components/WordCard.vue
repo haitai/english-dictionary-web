@@ -26,9 +26,16 @@
         <div class="card word-detail-card">
           <!-- 紧凑头部 -->
           <div class="word-header">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 text-center">
-              {{ wordData?.word }}
-            </h2>
+            <div class="flex items-center justify-center gap-3">
+              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                {{ wordData?.word }}
+              </h2>
+              <SpeakerButton 
+                :text="wordData?.word || ''"
+                :lang="'en'"
+                :speed="0.8"
+              />
+            </div>
             <p v-if="wordData?.pronunciation" class="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base text-center">
               [{{ wordData.pronunciation }}]
             </p>
@@ -83,6 +90,7 @@
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import SpeakerButton from './SpeakerButton.vue'
 
 const props = defineProps({
   word: {
