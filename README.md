@@ -33,7 +33,7 @@
 - **路由**: Vue Router
 - **样式**: Tailwind CSS
 - **数据存储**: Supabase (认证 + 数据库)
-- **发音服务**: Web Speech API + Google TTS
+- **发音服务**: Google TTS
 - **音标服务**: Free Dictionary API + WordsAPI
 - **词典数据**: [Open English Dictionary](https://github.com/ahpxex/open-english-dictionary)
 - **部署**: GitHub Pages
@@ -211,15 +211,11 @@ english-dictionary-web/
 
 #### 技术方案
 
-1. **Web Speech API**（优先）
-   - 浏览器原生支持，无需外部服务
-   - 支持多种语言和音色
-   - 完全免费，无使用限制
-
-2. **Google TTS**（降级方案）
-   - 当浏览器不支持 Web Speech API 时自动启用
-   - 高质量语音合成
-   - 免费使用，无需注册
+**Google TTS**
+- 高质量语音合成
+- 免费使用，无需注册
+- 支持多种语言和音色
+- 稳定可靠的在线服务
 
 #### 功能特性
 
@@ -228,8 +224,6 @@ english-dictionary-web/
 - 🌍 **多语言支持**：支持英语、中文等多种语言
 - ⏸️ **播放控制**：支持停止、重新播放
 - 📱 **移动端优化**：完美适配手机和平板
-- 🇨🇳 **中国大陆优化**：智能检测网络环境，优先使用稳定服务
-- 🔄 **智能降级**：服务失败时自动切换，确保功能可用
 
 #### 使用方法
 
@@ -255,9 +249,6 @@ stopSpeaking()
 - ⚙️ **个性化设置**：可自定义朗读开关、语速、语言等参数
 - 📱 **用户友好**：直观的设置界面，一键开启/关闭
 - 🔄 **智能回退**：设置失败时自动使用默认配置
-- 🇨🇳 **中国大陆优化**：智能检测网络环境，优先使用 Google TTS
-- ⏱️ **超时保护**：3秒 Web Speech API 超时，5秒 Google TTS 超时
-- 🔇 **静默模式**：失败时不显示错误，避免影响用户体验
 
 #### 朗读场景
 
@@ -350,51 +341,6 @@ const results = await getBatchPhonetics(words)
 
 详细说明请查看 [CACHING.md](CACHING.md)
 
-## 🇨🇳 中国大陆用户特别说明
-
-### 网络环境优化
-
-本项目针对中国大陆用户的网络环境进行了特别优化：
-
-#### 智能服务选择
-
-1. **地理位置检测**：
-   - 自动检测用户所在地区
-   - 中国大陆用户优先使用 Google TTS
-   - 其他地区优先使用 Web Speech API
-
-2. **网络延迟检测**：
-   - 检测访问 Google 服务的延迟
-   - 延迟超过 3 秒时自动切换到稳定服务
-   - 避免因网络问题导致的发音失败
-
-3. **错误处理优化**：
-   - 超时保护：Web Speech API 3 秒超时，Google TTS 5 秒超时
-   - 静默失败：发音失败时不显示错误信息，避免影响用户体验
-   - 智能降级：主服务失败时自动尝试备用服务
-
-#### 使用建议
-
-- **有代理环境**：建议开启自动朗读功能，享受完整功能
-- **无代理环境**：发音功能可能受限，但不影响其他功能使用
-- **网络不稳定**：系统会自动选择最稳定的服务
-
-#### 技术实现
-
-```javascript
-// 地理位置检测
-const isChinaRegion = await checkChinaRegion()
-
-// 智能服务选择
-if (isChinaRegion) {
-  // 中国大陆：优先 Google TTS
-  return await speakWithGoogleTTS(text, lang)
-} else {
-  // 其他地区：优先 Web Speech API
-  return await speakWithWebSpeechAPI(text, lang, speed)
-}
-```
-
 ## 📝 许可证
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
@@ -405,7 +351,6 @@ if (isChinaRegion) {
 - [Supabase](https://supabase.com/) - 提供免费的后端服务
 - [Vue.js](https://vuejs.org/) - 优秀的前端框架
 - [Tailwind CSS](https://tailwindcss.com/) - 实用的 CSS 框架
-- [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) - 浏览器原生发音服务
 - [Google Text-to-Speech](https://cloud.google.com/text-to-speech) - 高质量语音合成服务
 - [Free Dictionary API](https://dictionaryapi.dev/) - 免费音标和发音服务
 - [WordsAPI](https://rapidapi.com/dpventures/api/wordsapi) - 高质量词典和音标数据
