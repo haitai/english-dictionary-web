@@ -13,6 +13,7 @@
 - 🔍 **强大搜索** - 快速搜索 25,000+ 英文单词
 - 📖 **详细释义** - 双语释义、例句、词形变化、近义词对比
 - 🎵 **真人发音** - 免费 TTS 发音服务，支持多种语音
+- 📝 **准确音标** - 免费在线音标服务，确保发音准确性
 - 🧠 **科学记忆** - 基于 SM-2 算法的间隔重复记忆系统
 - ☁️ **跨端同步** - 学习进度云端同步，随时随地学习
 - ⚡ **智能缓存** - 本地优先，乐观更新，极速响应
@@ -31,6 +32,7 @@
 - **样式**: Tailwind CSS
 - **数据存储**: Supabase (认证 + 数据库)
 - **发音服务**: Web Speech API + Google TTS
+- **音标服务**: Free Dictionary API + WordsAPI
 - **词典数据**: [Open English Dictionary](https://github.com/ahpxex/open-english-dictionary)
 - **部署**: GitHub Pages
 
@@ -161,7 +163,8 @@ english-dictionary-web/
 │   │   ├── supabase.js
 │   │   ├── sm2.js
 │   │   ├── dictionary.js
-│   │   └── tts.js              # 文本转语音工具
+│   │   ├── tts.js              # 文本转语音工具
+│   │   └── phonetic.js         # 音标获取工具
 │   ├── router/
 │   │   └── index.js
 │   ├── App.vue
@@ -233,6 +236,48 @@ await speakText('hello', 'en', 1.0)
 stopSpeaking()
 ```
 
+## 📝 音标功能
+
+### 免费音标服务
+
+本项目集成了多种免费的在线音标服务，确保用户能够看到准确的音标：
+
+#### 技术方案
+
+1. **Free Dictionary API**（优先）
+   - 完全免费，无需注册
+   - 提供准确的 IPA 音标
+   - 支持多种发音变体
+
+2. **WordsAPI (RapidAPI)**（备选）
+   - 高质量音标数据
+   - 需要免费注册获取 API Key
+   - 支持批量查询
+
+#### 功能特性
+
+- 📝 **自动获取**：查看单词时自动获取最新音标
+- 🔄 **智能回退**：在线服务失败时使用原始数据
+- ⚡ **缓存优化**：音标结果本地缓存，避免重复请求
+- 🎯 **准确可靠**：优先使用权威在线服务，确保准确性
+- 📱 **加载提示**：显示音标获取进度，提升用户体验
+
+#### 使用方法
+
+```javascript
+import { getPhonetic, getBatchPhonetics } from '@/utils/phonetic'
+
+// 获取单个单词音标
+const phonetic = await getPhonetic('hello', '/həˈloʊ/')
+
+// 批量获取音标
+const words = [
+  { word: 'hello', phonetic: '/həˈloʊ/' },
+  { word: 'world', phonetic: '/wɜːrld/' }
+]
+const results = await getBatchPhonetics(words)
+```
+
 ## ⚡ 性能优化
 
 ### 按需加载 + 智能缓存
@@ -268,6 +313,8 @@ stopSpeaking()
 - [Tailwind CSS](https://tailwindcss.com/) - 实用的 CSS 框架
 - [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) - 浏览器原生发音服务
 - [Google Text-to-Speech](https://cloud.google.com/text-to-speech) - 高质量语音合成服务
+- [Free Dictionary API](https://dictionaryapi.dev/) - 免费音标和发音服务
+- [WordsAPI](https://rapidapi.com/dpventures/api/wordsapi) - 高质量词典和音标数据
 
 ## 📮 联系方式
 

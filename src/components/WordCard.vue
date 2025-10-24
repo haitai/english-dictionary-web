@@ -36,9 +36,17 @@
                 :speed="0.8"
               />
             </div>
-            <p v-if="wordData?.pronunciation" class="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base text-center">
-              [{{ wordData.pronunciation }}]
-            </p>
+            <div v-if="currentPhonetic || phoneticLoading" class="mt-1 text-center">
+              <div v-if="phoneticLoading" class="text-gray-500 dark:text-gray-400 text-sm">
+                <div class="inline-flex items-center gap-1">
+                  <div class="w-3 h-3 border border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                  获取音标中...
+                </div>
+              </div>
+              <p v-else-if="currentPhonetic" class="text-gray-600 dark:text-gray-400 text-sm md:text-base">
+                [{{ currentPhonetic }}]
+              </p>
+            </div>
           </div>
 
           <!-- 可滚动内容区域 -->
@@ -91,6 +99,7 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import SpeakerButton from './SpeakerButton.vue'
+import { getPhonetic } from '@/utils/phonetic'
 
 const props = defineProps({
   word: {
@@ -104,6 +113,8 @@ const props = defineProps({
 })
 
 const isFlipped = ref(false)
+const currentPhonetic = ref('')
+const phoneticLoading = ref(false)
 
 // 高亮单词功能
 function highlightWord(text, word) {
@@ -113,6 +124,23 @@ function highlightWord(text, word) {
   const regex = new RegExp(`\\b(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'gi')
   
   return text.replace(regex, '<span class="highlight-word">$1</span>')
+}
+
+// 获取音标
+async function fetchPhonetic() {
+  if (!props.word) return
+  
+  phoneticLoading.value = true
+  
+  try {
+    const phonetic = await getPhonetic(props.word, props.wordData?.pronunciation)
+    currentPhonetic.value = phonetic || ''
+  } catch (error) {
+    console.warn('获取音标失败:', error)
+    currentPhonetic.value = props.wordData?.pronunciation || ''
+  } finally {
+    phoneticLoading.value = false
+  }
 }
 
 // 键盘事件处理
@@ -126,13 +154,25 @@ function handleKeyPress(e) {
   }
 }
 
-// 监听单词变化，重置翻转状态
+// 监听单词变化，重置翻转状态并获取音标
 watch(() => props.word, () => {
   isFlipped.value = false
+  fetchPhonetic()
+})
+
+// 监听单词数据变化，获取音标
+watch(() => props.wordData, () => {
+  if (props.wordData) {
+    fetchPhonetic()
+  }
 })
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyPress)
+  // 初始获取音标
+  if (props.word) {
+    fetchPhonetic()
+  }
 })
 
 onUnmounted(() => {

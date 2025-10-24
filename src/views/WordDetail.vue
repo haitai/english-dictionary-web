@@ -22,9 +22,17 @@
                 :speed="0.8"
               />
             </div>
-            <p v-if="wordData.pronunciation" class="text-xl text-gray-600 dark:text-gray-400 mb-4">
-              [{{ wordData.pronunciation }}]
-            </p>
+            <div v-if="currentPhonetic || phoneticLoading" class="mb-4">
+              <div v-if="phoneticLoading" class="text-gray-500 dark:text-gray-400">
+                <div class="inline-flex items-center gap-2">
+                  <div class="w-4 h-4 border border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                  获取音标中...
+                </div>
+              </div>
+              <p v-else-if="currentPhonetic" class="text-xl text-gray-600 dark:text-gray-400">
+                [{{ currentPhonetic }}]
+              </p>
+            </div>
             <div class="inline-block px-4 py-2 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
               <p class="text-gray-800 dark:text-gray-200">
                 {{ wordData.concise_definition }}
@@ -153,6 +161,7 @@ import { useDictionaryStore } from '@/stores/dictionary'
 import { useLearningStore } from '@/stores/learning'
 import { useUserStore } from '@/stores/user'
 import SpeakerButton from '@/components/SpeakerButton.vue'
+import { getPhonetic } from '@/utils/phonetic'
 
 const route = useRoute()
 const dictionaryStore = useDictionaryStore()
@@ -162,11 +171,30 @@ const userStore = useUserStore()
 const wordData = ref(null)
 const loading = ref(false)
 const error = ref(null)
+const currentPhonetic = ref('')
+const phoneticLoading = ref(false)
 
 const isCollected = computed(() => {
   if (!wordData.value) return false
   return learningStore.isCollected(wordData.value.word)
 })
+
+// 获取音标
+async function fetchPhonetic() {
+  if (!wordData.value?.word) return
+  
+  phoneticLoading.value = true
+  
+  try {
+    const phonetic = await getPhonetic(wordData.value.word, wordData.value.pronunciation)
+    currentPhonetic.value = phonetic || ''
+  } catch (error) {
+    console.warn('获取音标失败:', error)
+    currentPhonetic.value = wordData.value.pronunciation || ''
+  } finally {
+    phoneticLoading.value = false
+  }
+}
 
 async function loadWord() {
   const word = route.params.word
@@ -177,6 +205,10 @@ async function loadWord() {
 
   try {
     wordData.value = await dictionaryStore.getWordDetail(word)
+    // 加载单词后获取音标
+    if (wordData.value) {
+      await fetchPhonetic()
+    }
   } catch (err) {
     error.value = '加载单词详情失败: ' + err.message
     console.error(err)
