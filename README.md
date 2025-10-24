@@ -12,12 +12,14 @@
 
 - 🔍 **强大搜索** - 快速搜索 25,000+ 英文单词
 - 📖 **详细释义** - 双语释义、例句、词形变化、近义词对比
+- 🎵 **真人发音** - 免费 TTS 发音服务，支持多种语音
 - 🧠 **科学记忆** - 基于 SM-2 算法的间隔重复记忆系统
 - ☁️ **跨端同步** - 学习进度云端同步，随时随地学习
 - ⚡ **智能缓存** - 本地优先，乐观更新，极速响应
 - 📡 **离线支持** - 离线学习，恢复网络后自动同步
 - ⭐ **收藏管理** - 收藏重要单词，随时复习
 - 📊 **学习统计** - 可视化学习进度和成就
+- ⌨️ **快捷键支持** - 键盘操作，提升学习效率
 - 🌓 **深色模式** - 支持浅色/深色主题切换
 - 📱 **响应式设计** - 完美适配手机、平板和电脑
 
@@ -28,6 +30,7 @@
 - **路由**: Vue Router
 - **样式**: Tailwind CSS
 - **数据存储**: Supabase (认证 + 数据库)
+- **发音服务**: Web Speech API + Google TTS
 - **词典数据**: [Open English Dictionary](https://github.com/ahpxex/open-english-dictionary)
 - **部署**: GitHub Pages
 
@@ -99,6 +102,24 @@ npm run build
 
 构建产物将在 `dist/` 目录。
 
+## 🎯 功能使用
+
+### 发音功能
+
+1. **学习模式**：点击单词旁边的 🔊 按钮即可播放发音
+2. **单词详情**：在单词详情页面点击发音按钮
+3. **快捷键**：支持键盘操作，提升学习效率
+   - `空格键`：翻转单词卡片
+   - `Esc键`：返回单词面
+   - `1-3数字键`：快速评分掌握程度
+
+### 学习模式
+
+1. **开始学习**：进入学习模式，系统随机展示单词
+2. **查看释义**：点击"查看释义"或按空格键翻转卡片
+3. **评分掌握**：根据掌握程度选择 1-3 分
+4. **收藏单词**：点击 ⭐ 收藏重要单词
+
 ## 🚢 部署
 
 详细的部署指南请查看 [DEPLOY.md](DEPLOY.md)，包括：
@@ -122,7 +143,8 @@ english-dictionary-web/
 │   ├── components/             # Vue 组件
 │   │   ├── WordCard.vue
 │   │   ├── SearchBar.vue
-│   │   └── ProgressChart.vue
+│   │   ├── ProgressChart.vue
+│   │   └── SpeakerButton.vue   # 发音按钮组件
 │   ├── views/                  # 页面视图
 │   │   ├── Home.vue
 │   │   ├── Study.vue
@@ -138,7 +160,8 @@ english-dictionary-web/
 │   ├── utils/                  # 工具函数
 │   │   ├── supabase.js
 │   │   ├── sm2.js
-│   │   └── dictionary.js
+│   │   ├── dictionary.js
+│   │   └── tts.js              # 文本转语音工具
 │   ├── router/
 │   │   └── index.js
 │   ├── App.vue
@@ -171,6 +194,44 @@ english-dictionary-web/
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 打开 Pull Request
+
+## 🎵 发音功能
+
+### 免费发音服务
+
+本项目集成了多种免费的发音服务，确保用户能够听到准确的单词发音：
+
+#### 技术方案
+
+1. **Web Speech API**（优先）
+   - 浏览器原生支持，无需外部服务
+   - 支持多种语言和音色
+   - 完全免费，无使用限制
+
+2. **Google TTS**（降级方案）
+   - 当浏览器不支持 Web Speech API 时自动启用
+   - 高质量语音合成
+   - 免费使用，无需注册
+
+#### 功能特性
+
+- 🔊 **一键发音**：点击发音按钮即可播放
+- 🎛️ **语速调节**：支持 0.1x - 2.0x 语速
+- 🌍 **多语言支持**：支持英语、中文等多种语言
+- ⏸️ **播放控制**：支持停止、重新播放
+- 📱 **移动端优化**：完美适配手机和平板
+
+#### 使用方法
+
+```javascript
+import { speakText, stopSpeaking } from '@/utils/tts'
+
+// 播放单词发音
+await speakText('hello', 'en', 1.0)
+
+// 停止播放
+stopSpeaking()
+```
 
 ## ⚡ 性能优化
 
@@ -205,6 +266,8 @@ english-dictionary-web/
 - [Supabase](https://supabase.com/) - 提供免费的后端服务
 - [Vue.js](https://vuejs.org/) - 优秀的前端框架
 - [Tailwind CSS](https://tailwindcss.com/) - 实用的 CSS 框架
+- [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) - 浏览器原生发音服务
+- [Google Text-to-Speech](https://cloud.google.com/text-to-speech) - 高质量语音合成服务
 
 ## 📮 联系方式
 
