@@ -33,6 +33,11 @@
 
 ## 📸 预览
 
+https://github.com/TICKurt/english-dictionary-web/blob/main/%E9%A6%96%E9%A1%B5.png
+https://github.com/TICKurt/english-dictionary-web/blob/main/%E8%AF%8D%E5%85%B8%E6%A8%A1%E5%BC%8F.png
+https://github.com/TICKurt/english-dictionary-web/blob/main/%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%BC%8F1.png
+https://github.com/TICKurt/english-dictionary-web/blob/main/%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%BC%8F2.png
+https://github.com/TICKurt/english-dictionary-web/blob/main/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.png
 
 
 ## 🎯 快速开始
