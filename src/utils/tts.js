@@ -1,7 +1,9 @@
 /**
  * 文本转语音 (TTS) 工具
- * 使用 Google Text-to-Speech API
+ * 使用 Web Speech API 和 Google Text-to-Speech API
  */
+
+import { getSpeakSettings, shouldAutoSpeak } from '@/utils/settings'
 
 // Google TTS API 配置
 const GOOGLE_TTS_URL = 'https://translate.google.com/translate_tts'
@@ -144,5 +146,59 @@ export function preloadVoices() {
     speechSynthesis.addEventListener('voiceschanged', () => {
       console.log('语音列表已加载:', getSupportedLanguages().length, '个语音')
     })
+  }
+}
+
+/**
+ * 自动朗读功能
+ * @param {string} text - 要朗读的文本
+ * @param {string} context - 上下文 ('wordDetail', 'study', 'search')
+ * @param {Object} options - 选项
+ */
+export async function autoSpeak(text, context, options = {}) {
+  if (!text || !shouldAutoSpeak(context)) {
+    return false
+  }
+
+  const settings = getSpeakSettings()
+  const lang = options.lang || settings.language
+  const speed = options.speed || settings.speed
+
+  try {
+    await speakText(text, lang, speed)
+    return true
+  } catch (error) {
+    console.warn('自动朗读失败:', error)
+    return false
+  }
+}
+
+/**
+ * 朗读句子
+ * @param {string} text - 要朗读的句子
+ * @param {Object} options - 选项
+ */
+export async function speakSentence(text, options = {}) {
+  if (!text) return false
+
+  const settings = getSpeakSettings()
+  const lang = options.lang || settings.language
+  const speed = options.speed || settings.speed
+
+  try {
+    await speakText(text, lang, speed)
+    return true
+  } catch (error) {
+    console.warn('朗读句子失败:', error)
+    return false
+  }
+}
+
+/**
+ * 停止所有朗读
+ */
+export function stopAllSpeaking() {
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel()
   }
 }

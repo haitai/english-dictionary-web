@@ -64,10 +64,18 @@
               </button>
 
               <!-- 用户菜单 -->
-              <div v-if="userStore.isAuthenticated">
+              <div v-if="userStore.isAuthenticated" class="flex items-center space-x-2">
+                <router-link 
+                  to="/settings"
+                  class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  title="设置"
+                >
+                  <span class="text-2xl">⚙️</span>
+                </router-link>
                 <router-link 
                   to="/profile"
                   class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  title="个人中心"
                 >
                   <span class="text-2xl">👤</span>
                 </router-link>
@@ -122,6 +130,22 @@
               @click="mobileMenuOpen = false"
             >
               收藏
+            </router-link>
+            <router-link 
+              v-if="userStore.isAuthenticated"
+              to="/settings" 
+              class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              @click="mobileMenuOpen = false"
+            >
+              设置
+            </router-link>
+            <router-link 
+              v-if="userStore.isAuthenticated"
+              to="/profile" 
+              class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              @click="mobileMenuOpen = false"
+            >
+              个人中心
             </router-link>
           </div>
         </div>

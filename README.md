@@ -14,6 +14,8 @@
 - 📖 **详细释义** - 双语释义、例句、词形变化、近义词对比
 - 🎵 **真人发音** - 免费 TTS 发音服务，支持多种语音
 - 📝 **准确音标** - 免费在线音标服务，确保发音准确性
+- 🔊 **自动朗读** - 智能自动朗读，支持个性化设置
+- 📖 **句子朗读** - 例句一键朗读，提升学习体验
 - 🧠 **科学记忆** - 基于 SM-2 算法的间隔重复记忆系统
 - ☁️ **跨端同步** - 学习进度云端同步，随时随地学习
 - ⚡ **智能缓存** - 本地优先，乐观更新，极速响应
@@ -146,13 +148,15 @@ english-dictionary-web/
 │   │   ├── WordCard.vue
 │   │   ├── SearchBar.vue
 │   │   ├── ProgressChart.vue
-│   │   └── SpeakerButton.vue   # 发音按钮组件
+│   │   ├── SpeakerButton.vue   # 发音按钮组件
+│   │   └── SentenceSpeaker.vue # 句子朗读组件
 │   ├── views/                  # 页面视图
 │   │   ├── Home.vue
 │   │   ├── Study.vue
 │   │   ├── Review.vue
 │   │   ├── Collection.vue
 │   │   ├── Profile.vue
+│   │   ├── Settings.vue
 │   │   ├── WordDetail.vue
 │   │   └── Auth.vue
 │   ├── stores/                 # Pinia 状态管理
@@ -164,7 +168,8 @@ english-dictionary-web/
 │   │   ├── sm2.js
 │   │   ├── dictionary.js
 │   │   ├── tts.js              # 文本转语音工具
-│   │   └── phonetic.js         # 音标获取工具
+│   │   ├── phonetic.js         # 音标获取工具
+│   │   └── settings.js         # 用户设置管理
 │   ├── router/
 │   │   └── index.js
 │   ├── App.vue
@@ -234,6 +239,45 @@ await speakText('hello', 'en', 1.0)
 
 // 停止播放
 stopSpeaking()
+```
+
+## 🔊 自动朗读功能
+
+### 智能朗读系统
+
+本项目集成了智能自动朗读系统，支持多种场景的自动朗读和个性化设置：
+
+#### 功能特性
+
+- 🎯 **场景化朗读**：支持单词详情、学习模式、搜索结果等不同场景
+- ⚙️ **个性化设置**：可自定义朗读开关、语速、语言等参数
+- 📱 **用户友好**：直观的设置界面，一键开启/关闭
+- 🔄 **智能回退**：设置失败时自动使用默认配置
+
+#### 朗读场景
+
+1. **单词详情页**：进入单词详情时自动朗读单词
+2. **学习模式**：学习新单词时自动朗读
+3. **搜索结果**：搜索单词时自动朗读
+4. **例句朗读**：点击例句旁的朗读按钮播放句子
+
+#### 设置选项
+
+- **自动朗读总开关**：控制是否启用自动朗读
+- **场景开关**：分别控制不同场景的自动朗读
+- **语速调节**：0.5x - 2.0x 语速范围
+- **语言选择**：支持英语（美式/英式/澳式）、中文等
+
+#### 使用方法
+
+```javascript
+import { autoSpeak, speakSentence } from '@/utils/tts'
+
+// 自动朗读（根据设置决定是否朗读）
+await autoSpeak('hello', 'wordDetail')
+
+// 朗读句子
+await speakSentence('Hello, how are you?')
 ```
 
 ## 📝 音标功能

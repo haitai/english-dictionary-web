@@ -33,6 +33,12 @@ const routes = [
     meta: { title: '个人中心', requiresAuth: true }
   },
   {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/views/Settings.vue'),
+    meta: { title: '个人设置', requiresAuth: true }
+  },
+  {
     path: '/word/:word',
     name: 'WordDetail',
     component: () => import('@/views/WordDetail.vue'),

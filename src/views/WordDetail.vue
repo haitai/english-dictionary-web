@@ -101,7 +101,14 @@
               </div>
               
               <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">例句：</div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">例句：</div>
+                  <SentenceSpeaker 
+                    :text="def.example_en"
+                    :lang="'en'"
+                    :speed="0.8"
+                  />
+                </div>
                 <p class="text-gray-700 dark:text-gray-300 mb-2">{{ def.example_en }}</p>
                 <p class="text-gray-900 dark:text-gray-100">{{ def.example_cn }}</p>
               </div>
@@ -161,7 +168,9 @@ import { useDictionaryStore } from '@/stores/dictionary'
 import { useLearningStore } from '@/stores/learning'
 import { useUserStore } from '@/stores/user'
 import SpeakerButton from '@/components/SpeakerButton.vue'
+import SentenceSpeaker from '@/components/SentenceSpeaker.vue'
 import { getPhonetic } from '@/utils/phonetic'
+import { autoSpeak } from '@/utils/tts'
 
 const route = useRoute()
 const dictionaryStore = useDictionaryStore()
@@ -205,9 +214,11 @@ async function loadWord() {
 
   try {
     wordData.value = await dictionaryStore.getWordDetail(word)
-    // 加载单词后获取音标
+    // 加载单词后获取音标和自动朗读
     if (wordData.value) {
       await fetchPhonetic()
+      // 自动朗读单词
+      await autoSpeak(wordData.value.word, 'wordDetail')
     }
   } catch (err) {
     error.value = '加载单词详情失败: ' + err.message

@@ -74,7 +74,14 @@
                   {{ def.explanation_cn }}
                 </p>
                 <div v-if="def.example_en" class="text-xs bg-white dark:bg-gray-800 p-2 md:p-3 rounded-lg border border-gray-200 dark:border-gray-600 mt-2">
-                  <p class="text-gray-600 dark:text-gray-400 mb-1 italic leading-snug" v-html="highlightWord(def.example_en, wordData?.word)"></p>
+                  <div class="flex items-start justify-between gap-2 mb-1">
+                    <p class="text-gray-600 dark:text-gray-400 italic leading-snug flex-1" v-html="highlightWord(def.example_en, wordData?.word)"></p>
+                    <SentenceSpeaker 
+                      :text="def.example_en"
+                      :lang="'en'"
+                      :speed="0.8"
+                    />
+                  </div>
                   <p class="text-gray-700 dark:text-gray-300 leading-snug" v-html="highlightWord(def.example_cn, wordData?.word)"></p>
                 </div>
               </div>
@@ -99,7 +106,9 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import SpeakerButton from './SpeakerButton.vue'
+import SentenceSpeaker from './SentenceSpeaker.vue'
 import { getPhonetic } from '@/utils/phonetic'
+import { autoSpeak } from '@/utils/tts'
 
 const props = defineProps({
   word: {
@@ -160,10 +169,12 @@ watch(() => props.word, () => {
   fetchPhonetic()
 })
 
-// 监听单词数据变化，获取音标
-watch(() => props.wordData, () => {
+// 监听单词数据变化，获取音标和自动朗读
+watch(() => props.wordData, async () => {
   if (props.wordData) {
     fetchPhonetic()
+    // 自动朗读单词
+    await autoSpeak(props.wordData.word, 'study')
   }
 })
 
