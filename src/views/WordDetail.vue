@@ -217,8 +217,10 @@ async function loadWord() {
     // 加载单词后获取音标和自动朗读
     if (wordData.value) {
       await fetchPhonetic()
-      // 自动朗读单词
-      await autoSpeak(wordData.value.word, 'wordDetail')
+      // 延迟自动朗读，避免阻塞页面加载
+      setTimeout(async () => {
+        await autoSpeak(wordData.value.word, 'wordDetail')
+      }, 200)
     }
   } catch (err) {
     error.value = '加载单词详情失败: ' + err.message

@@ -57,18 +57,26 @@ const handleSpeak = async () => {
   isSpeaking.value = true
   
   try {
-    await speakSentence(props.text, {
-      lang: props.lang,
-      speed: props.speed
-    })
+    // 延迟执行，确保不阻塞用户交互
+    setTimeout(async () => {
+      try {
+        await speakSentence(props.text, {
+          lang: props.lang,
+          speed: props.speed
+        })
+      } catch (error) {
+        console.warn('朗读句子失败:', error)
+      } finally {
+        // 估算播放时间，避免按钮状态异常
+        const estimatedTime = Math.max(props.text.length * 50, 1000)
+        setTimeout(() => {
+          isSpeaking.value = false
+        }, estimatedTime)
+      }
+    }, 50)
   } catch (error) {
     console.warn('朗读句子失败:', error)
-  } finally {
-    // 估算播放时间，避免按钮状态异常
-    const estimatedTime = Math.max(props.text.length * 50, 1000)
-    setTimeout(() => {
-      isSpeaking.value = false
-    }, estimatedTime)
+    isSpeaking.value = false
   }
 }
 </script>

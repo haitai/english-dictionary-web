@@ -173,8 +173,10 @@ watch(() => props.word, () => {
 watch(() => props.wordData, async () => {
   if (props.wordData) {
     fetchPhonetic()
-    // 自动朗读单词
-    await autoSpeak(props.wordData.word, 'study')
+    // 延迟自动朗读，避免阻塞页面加载
+    setTimeout(async () => {
+      await autoSpeak(props.wordData.word, 'study')
+    }, 100)
   }
 })
 

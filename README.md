@@ -33,7 +33,7 @@
 - **路由**: Vue Router
 - **样式**: Tailwind CSS
 - **数据存储**: Supabase (认证 + 数据库)
-- **发音服务**: Google TTS
+- **发音服务**: Web Speech API（浏览器原生）
 - **音标服务**: Free Dictionary API + WordsAPI
 - **词典数据**: [Open English Dictionary](https://github.com/ahpxex/open-english-dictionary)
 - **部署**: GitHub Pages
@@ -211,11 +211,12 @@ english-dictionary-web/
 
 #### 技术方案
 
-**Google TTS**
+**Web Speech API（浏览器原生）**
+- 浏览器内置，无需外部服务
 - 高质量语音合成
-- 免费使用，无需注册
+- 免费使用，完全离线
 - 支持多种语言和音色
-- 稳定可靠的在线服务
+- Edge、Chrome、Safari 均支持
 
 #### 功能特性
 
@@ -351,7 +352,7 @@ const results = await getBatchPhonetics(words)
 - [Supabase](https://supabase.com/) - 提供免费的后端服务
 - [Vue.js](https://vuejs.org/) - 优秀的前端框架
 - [Tailwind CSS](https://tailwindcss.com/) - 实用的 CSS 框架
-- [Google Text-to-Speech](https://cloud.google.com/text-to-speech) - 高质量语音合成服务
+- [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) - 浏览器原生语音合成服务
 - [Free Dictionary API](https://dictionaryapi.dev/) - 免费音标和发音服务
 - [WordsAPI](https://rapidapi.com/dpventures/api/wordsapi) - 高质量词典和音标数据
 
