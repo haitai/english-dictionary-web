@@ -26,40 +26,22 @@
 
       <!-- 搜索结果 -->
       <div v-else>
-        <div
+        <button
           v-for="word in results"
           :key="word.word"
-          class="group border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          @click="selectWord(word.word)"
+          class="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
         >
-          <div class="px-4 py-3 flex items-start justify-between gap-3">
-            <button
-              @click="selectWord(word.word)"
-              class="flex-1 text-left"
-            >
-              <div class="font-medium text-gray-900 dark:text-gray-100">
-                {{ word.word }}
-                <span v-if="word.pronunciation" class="ml-2 text-sm text-gray-500 dark:text-gray-400">
-                  [{{ word.pronunciation }}]
-                </span>
-              </div>
-              <div class="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
-                {{ word.concise_definition }}
-              </div>
-            </button>
-            <button
-              @click.stop="addToLearning(word.word)"
-              :disabled="learningStore.isInProgress(word.word)"
-              class="px-3 py-2 text-xs rounded-lg transition-colors flex items-center gap-1"
-              :class="learningStore.isInProgress(word.word) 
-                ? 'bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 cursor-not-allowed' 
-                : 'bg-gray-100 hover:bg-primary-100 dark:bg-gray-700 dark:hover:bg-primary-900/20 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'"
-              :title="learningStore.isInProgress(word.word) ? '已在学习中' : '加入学习'"
-            >
-              <span>{{ learningStore.isInProgress(word.word) ? '✓' : '📖' }}</span>
-              <span class="hidden sm:inline">{{ learningStore.isInProgress(word.word) ? '已学' : '学习' }}</span>
-            </button>
+          <div class="font-medium text-gray-900 dark:text-gray-100">
+            {{ word.word }}
+            <span v-if="word.pronunciation" class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+              [{{ word.pronunciation }}]
+            </span>
           </div>
-        </div>
+          <div class="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+            {{ word.concise_definition }}
+          </div>
+        </button>
       </div>
     </div>
 
@@ -76,13 +58,9 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useDictionaryStore } from '@/stores/dictionary'
-import { useLearningStore } from '@/stores/learning'
-import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const dictionaryStore = useDictionaryStore()
-const learningStore = useLearningStore()
-const userStore = useUserStore()
 
 const searchQuery = ref('')
 const showResults = ref(false)
@@ -117,37 +95,6 @@ function selectWord(word) {
   searchQuery.value = ''
   results.value = []
   router.push({ name: 'WordDetail', params: { word } })
-}
-
-// 加入学习
-async function addToLearning(word) {
-  if (!word) return
-  
-  // 检查是否已登录
-  if (!userStore.isAuthenticated) {
-    alert('请先登录以使用此功能')
-    router.push('/auth')
-    return
-  }
-  
-  // 检查是否已经在学习中
-  if (learningStore.isInProgress(word)) {
-    alert('该单词已经在学习列表中')
-    return
-  }
-  
-  try {
-    // 使用质量分数 1（不认识）添加单词
-    const result = await learningStore.updateWordProgress(word, 1)
-    if (result.success) {
-      alert('已加入学习！')
-    } else {
-      alert('加入学习失败，请重试')
-    }
-  } catch (error) {
-    console.error('加入学习失败:', error)
-    alert('加入学习失败，请重试')
-  }
 }
 
 // 监听搜索结果变化

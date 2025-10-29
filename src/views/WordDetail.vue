@@ -1,5 +1,16 @@
 <template>
   <div class="max-w-4xl mx-auto">
+    <!-- Toast 提示 -->
+    <transition name="toast">
+      <div
+        v-if="showMessage"
+        class="fixed top-4 right-4 z-50 px-6 py-3 bg-green-600 text-white rounded-lg shadow-lg flex items-center gap-2"
+      >
+        <span class="text-xl">✓</span>
+        <span>{{ messageText }}</span>
+      </div>
+    </transition>
+
     <!-- 加载状态 -->
     <div v-if="loading" class="text-center py-20">
       <div class="text-4xl mb-4">⏳</div>
@@ -41,6 +52,14 @@
           </div>
 
           <div class="flex gap-2">
+            <button
+              v-if="userStore.isAuthenticated"
+              @click="addToLearning"
+              class="btn btn-primary"
+              title="加入学习"
+            >
+              📚 加入学习
+            </button>
             <button
               v-if="userStore.isAuthenticated"
               @click="toggleCollection"
@@ -182,6 +201,8 @@ const loading = ref(false)
 const error = ref(null)
 const currentPhonetic = ref('')
 const phoneticLoading = ref(false)
+const showMessage = ref(false)
+const messageText = ref('')
 
 const isCollected = computed(() => {
   if (!wordData.value) return false
@@ -240,6 +261,34 @@ async function toggleCollection() {
   }
 }
 
+// 显示提示消息
+function showMessageFunc(text) {
+  messageText.value = text
+  showMessage.value = true
+  setTimeout(() => {
+    showMessage.value = false
+  }, 3000)
+}
+
+async function addToLearning() {
+  if (!wordData.value || !userStore.isAuthenticated) return
+
+  try {
+    // 将单词标记为"不认识"（质量评分 1），加入学习
+    const result = await learningStore.updateProgress(wordData.value.word, 1)
+    
+    if (result.success) {
+      // 提示用户
+      showMessageFunc('已加入学习！这个单词将被标记为"不认识"，系统会定期提醒你复习。')
+    } else {
+      showMessageFunc('加入学习失败，请稍后重试。')
+    }
+  } catch (error) {
+    console.error('加入学习失败:', error)
+    showMessageFunc('加入学习失败，请稍后重试。')
+  }
+}
+
 watch(() => route.params.word, () => {
   loadWord()
 })
@@ -248,4 +297,21 @@ onMounted(() => {
   loadWord()
 })
 </script>
+
+<style scoped>
+/* Toast 过渡效果 */
+.toast-enter-active, .toast-leave-active {
+  transition: all 0.3s ease;
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+</style>
 
