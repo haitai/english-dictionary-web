@@ -100,6 +100,40 @@
                 <div class="example-cn">{{ def.example_cn }}</div>
               </div>
             </div>
+            
+            <!-- 词形变化 -->
+            <div v-if="currentWord.forms && Object.keys(currentWord.forms).length > 0" class="forms-section">
+              <h4 class="forms-title">词形变化</h4>
+              <div class="forms-list">
+                <div
+                  v-for="(value, key) in currentWord.forms"
+                  :key="key"
+                  class="form-item"
+                >
+                  <span class="form-label">{{ key }}</span>
+                  <span class="form-value">{{ value }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 相似词辨析 -->
+            <div v-if="currentWord.comparison && currentWord.comparison.length > 0" class="comparison-section">
+              <h4 class="comparison-title">相似词辨析</h4>
+              <div class="comparison-list">
+                <div
+                  v-for="(comp, index) in currentWord.comparison"
+                  :key="index"
+                  class="comparison-item"
+                >
+                  <div class="comparison-header">
+                    <span class="comparison-word">{{ currentWord.word }}</span>
+                    <span class="comparison-vs">vs</span>
+                    <span class="comparison-compare">{{ comp.word_to_compare }}</span>
+                  </div>
+                  <div class="comparison-analysis">{{ comp.analysis }}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -194,11 +228,11 @@ async function fetchPhonetic() {
   
   phoneticLoading.value = true
   try {
-    const phonetic = await getPhonetic(currentWord.value.word, currentWord.value.phonetic)
+    const phonetic = await getPhonetic(currentWord.value.word, currentWord.value.pronunciation)
     currentPhonetic.value = phonetic
   } catch (error) {
     console.error('获取音标失败:', error)
-    currentPhonetic.value = currentWord.value.phonetic || ''
+    currentPhonetic.value = currentWord.value.pronunciation || ''
   } finally {
     phoneticLoading.value = false
   }
@@ -773,6 +807,149 @@ onUnmounted(() => {
 }
 
 .dark .example-cn {
+  color: #d1d5db;
+}
+
+/* 词形变化 */
+.forms-section {
+  margin-top: clamp(1.5rem, 4vw, 2rem);
+  padding-top: clamp(1rem, 3vw, 1.5rem);
+  border-top: 1px solid #e5e7eb;
+}
+
+.dark .forms-section {
+  border-top-color: #374151;
+}
+
+.forms-title {
+  font-size: clamp(1rem, 3vw, 1.125rem);
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
+}
+
+.dark .forms-title {
+  color: #f9fafb;
+}
+
+.forms-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 1.5vw, 0.75rem);
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.75rem, 2vw, 1rem);
+  background: #f3f4f6;
+  border-radius: 6px;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+}
+
+.dark .form-item {
+  background: #374151;
+}
+
+.form-label {
+  color: #6b7280;
+  margin-right: clamp(0.25rem, 1vw, 0.5rem);
+}
+
+.dark .form-label {
+  color: #9ca3af;
+}
+
+.form-value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.dark .form-value {
+  color: #f9fafb;
+}
+
+/* 相似词辨析 */
+.comparison-section {
+  margin-top: clamp(1.5rem, 4vw, 2rem);
+  padding-top: clamp(1rem, 3vw, 1.5rem);
+  border-top: 1px solid #e5e7eb;
+}
+
+.dark .comparison-section {
+  border-top-color: #374151;
+}
+
+.comparison-title {
+  font-size: clamp(1rem, 3vw, 1.125rem);
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
+}
+
+.dark .comparison-title {
+  color: #f9fafb;
+}
+
+.comparison-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vw, 1rem);
+}
+
+.comparison-item {
+  padding: clamp(0.75rem, 2vw, 1rem);
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.dark .comparison-item {
+  background: #374151;
+}
+
+.comparison-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 0.75rem);
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.comparison-word {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dark .comparison-word {
+  color: #f9fafb;
+}
+
+.comparison-vs {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.dark .comparison-vs {
+  color: #9ca3af;
+}
+
+.comparison-compare {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.dark .comparison-compare {
+  color: #60a5fa;
+}
+
+.comparison-analysis {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  line-height: 1.6;
+  color: #374151;
+}
+
+.dark .comparison-analysis {
   color: #d1d5db;
 }
 
