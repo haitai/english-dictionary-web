@@ -627,7 +627,10 @@ onMounted(async () => {
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  max-height: 80vh;
 }
 
 .dark .definition-section {
@@ -639,7 +642,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+  min-height: 200px;
   padding: clamp(1rem, 3vw, 2rem);
 }
 
@@ -661,7 +664,11 @@ onMounted(async () => {
 }
 
 .definition-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: clamp(1rem, 3vw, 1.5rem);
+  overflow: hidden;
 }
 
 .definition-header {
@@ -712,8 +719,9 @@ onMounted(async () => {
 }
 
 .definition-body {
-  max-height: 50vh;
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .definition-item {
