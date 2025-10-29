@@ -238,6 +238,11 @@ export const useLearningStore = defineStore('learning', () => {
     return collectedWords.value.includes(word)
   }
 
+  // 检查单词是否在学习进度中
+  function isInProgress(word) {
+    return progressList.value.some(p => p.word === word)
+  }
+
   // 加载学习进度（优先使用缓存）
   async function loadProgress() {
     if (!userStore.user) return
@@ -361,6 +366,7 @@ export const useLearningStore = defineStore('learning', () => {
     addCollection,
     removeCollection,
     isCollected,
+    isInProgress,
     loadProgress,
     updateWordProgress,
     loadStats,

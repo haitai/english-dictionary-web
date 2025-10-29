@@ -10,6 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // 如果使用自定义域名，直接设置为 '/'
+  // base: '/',
   base: process.env.NODE_ENV === 'production' ? '/english-dictionary-web/' : '/',
   build: {
     rollupOptions: {
