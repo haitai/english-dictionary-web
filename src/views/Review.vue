@@ -66,6 +66,24 @@
             <div class="loading-spinner"></div>
             <span>加载音标中...</span>
           </div>
+          <!-- 简洁定义（模糊点击显示） -->
+          <div 
+            v-if="currentWord.concise_definition" 
+            class="concise-definition-wrapper"
+            @click="showConciseDefinition = !showConciseDefinition"
+          >
+            <div 
+              :class="[
+                'concise-definition-text',
+                showConciseDefinition ? 'revealed' : 'blurred'
+              ]"
+            >
+              {{ currentWord.concise_definition }}
+            </div>
+            <div class="concise-definition-hint">
+              {{ showConciseDefinition ? '点击隐藏' : '点击显示简洁定义' }}
+            </div>
+          </div>
         </div>
 
         <!-- 发音按钮 -->
@@ -254,6 +272,7 @@ const submitting = ref(false)
 const reviewedCount = ref(0)
 const totalDueWords = ref(0)
 const showDefinition = ref(false)
+const showConciseDefinition = ref(false)
 const currentPhonetic = ref('')
 const phoneticLoading = ref(false)
 
@@ -284,6 +303,7 @@ async function startReview() {
   reviewedCount.value = 0
   totalDueWords.value = dueWords.value.length
   showDefinition.value = false
+  showConciseDefinition.value = false
   await loadNextWord()
 }
 
@@ -296,6 +316,7 @@ async function loadNextWord() {
 
   loading.value = true
   showDefinition.value = false
+  showConciseDefinition.value = false
   
   try {
     const wordItem = dueWords.value[currentIndex.value]
@@ -454,6 +475,59 @@ onMounted(async () => {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* 简洁定义（模糊点击显示） */
+.concise-definition-wrapper {
+  margin-top: clamp(1rem, 3vw, 1.5rem);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.concise-definition-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.concise-definition-text {
+  padding: clamp(0.75rem, 2vw, 1rem);
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  line-height: 1.6;
+  color: #1e40af;
+  border-left: 4px solid #3b82f6;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.dark .concise-definition-text {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-left-color: #60a5fa;
+}
+
+.concise-definition-text.blurred {
+  filter: blur(8px);
+  cursor: pointer;
+}
+
+.concise-definition-text.revealed {
+  filter: blur(0);
+  cursor: text;
+  user-select: text;
+}
+
+.concise-definition-hint {
+  margin-top: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  color: #6b7280;
+  text-align: center;
+  font-style: italic;
+  transition: all 0.3s;
+}
+
+.dark .concise-definition-hint {
+  color: #9ca3af;
 }
 
 /* 操作按钮 */
