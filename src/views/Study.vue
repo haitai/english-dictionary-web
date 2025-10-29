@@ -86,8 +86,15 @@
           </div>
           <div class="definition-body">
             <div v-for="(def, index) in currentWord.definitions" :key="index" class="definition-item">
-              <div class="part-of-speech">{{ def.part_of_speech }}</div>
-              <div class="definition-text">{{ def.definition_cn }}</div>
+              <div class="part-of-speech">{{ def.pos }}</div>
+              <div class="definition-section-item">
+                <div class="definition-label">英文解释：</div>
+                <div class="definition-text-en">{{ def.explanation_en }}</div>
+              </div>
+              <div class="definition-section-item">
+                <div class="definition-label">中文解释：</div>
+                <div class="definition-text-cn">{{ def.explanation_cn }}</div>
+              </div>
               <div v-if="def.example_en" class="example">
                 <div class="example-en">{{ def.example_en }}</div>
                 <div class="example-cn">{{ def.example_cn }}</div>
@@ -701,14 +708,39 @@ onUnmounted(() => {
   margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
 }
 
-.definition-text {
+.definition-section-item {
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
+}
+
+.definition-label {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  color: #6b7280;
+  margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
+}
+
+.dark .definition-label {
+  color: #9ca3af;
+}
+
+.definition-text-en {
   font-size: clamp(0.875rem, 2.5vw, 1rem);
   line-height: 1.6;
-  color: #374151;
+  color: #6b7280;
   margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
 }
 
-.dark .definition-text {
+.dark .definition-text-en {
+  color: #9ca3af;
+}
+
+.definition-text-cn {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  line-height: 1.6;
+  color: #374151;
+  font-weight: 500;
+}
+
+.dark .definition-text-cn {
   color: #d1d5db;
 }
 
