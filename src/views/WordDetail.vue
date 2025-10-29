@@ -275,7 +275,7 @@ async function addToLearning() {
 
   try {
     // 将单词标记为"不认识"（质量评分 1），加入学习
-    const result = await learningStore.updateProgress(wordData.value.word, 1)
+    const result = await learningStore.updateWordProgress(wordData.value.word, 1)
     
     if (result.success) {
       // 提示用户
